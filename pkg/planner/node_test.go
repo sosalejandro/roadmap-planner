@@ -15,7 +15,6 @@ func TestNewNode(t *testing.T) {
 		args args
 		want *Node
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Creates new node called Patricia",
 			args: args{name: "Patricia"},
@@ -40,7 +39,6 @@ func TestNode_String(t *testing.T) {
 		fields fields
 		want   string
 	}{
-		// TODO: Add test cases.
 		{
 			name:   "Node is called Patricia",
 			fields: fields{name: "Patricia"},

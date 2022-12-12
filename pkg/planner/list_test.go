@@ -14,7 +14,6 @@ func TestNewIdea(t *testing.T) {
 		args args
 		want *Idea
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Creates an Idea named 'Create graph model'",
 			args: args{name: "Create graph model"},
@@ -77,7 +76,6 @@ func TestList_AddIdea(t *testing.T) {
 		args   args
 		want   want
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Pushes 'Make benchmarks after logic'",
 			fields: fields{
@@ -97,7 +95,8 @@ func TestList_AddIdea(t *testing.T) {
 				Node:  tt.fields.Node,
 				ideas: tt.fields.Ideas,
 			}
-			if got := l.AddIdea(tt.args.idea); got != tt.want.success && !reflect.DeepEqual(l.ideas, tt.want.state) {
+			if got := l.AddIdea(tt.args.idea); got != tt.want.success &&
+				!reflect.DeepEqual(l.ideas, tt.want.state) {
 				t.Errorf("l.AddIdea(%s) = %v, want %v", tt.args.idea, got, tt.want.success)
 			}
 		})
@@ -123,7 +122,6 @@ func TestList_InsertAt(t *testing.T) {
 		args   args
 		want   want
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Inserts at index 0 successfully",
 			fields: fields{
@@ -169,8 +167,105 @@ func TestList_InsertAt(t *testing.T) {
 				Node:  tt.fields.Node,
 				ideas: tt.fields.ideas,
 			}
-			if got := l.InsertAt(tt.args.i, tt.args.idea); got != tt.want.success || !reflect.DeepEqual(l.ideas[tt.args.i], tt.want.idea) {
+			if got := l.InsertAt(tt.args.i, tt.args.idea); got != tt.want.success ||
+				!reflect.DeepEqual(l.ideas[tt.args.i], tt.want.idea) {
 				t.Errorf("InsertAt() = %v, want %v", got, tt.want.success)
+			}
+		})
+	}
+}
+
+func TestList_DeleteAt(t *testing.T) {
+	type fields struct {
+		Node  *Node
+		ideas []Idea
+	}
+	type args struct {
+		i int
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "Deletes at index 2 successfully",
+			fields: fields{
+				Node: NewNode("Create app"),
+				ideas: []Idea{
+					*NewIdea("Create Diagrams"),
+					*NewIdea("Create Business Logic"),
+					*NewIdea("Create Folder Structure"),
+				},
+			},
+			args: args{
+				i: 2,
+			},
+			want: true,
+		},
+		{
+			name: "Negative index returns false",
+			fields: fields{
+				Node:  NewNode("Create app"),
+				ideas: []Idea{},
+			},
+			args: args{
+				i: -1,
+			},
+			want: false,
+		},
+		{
+			name: "Positive index on empty List returns false",
+			fields: fields{
+				Node:  NewNode("Create app"),
+				ideas: []Idea{},
+			},
+			args: args{
+				i: 2,
+			},
+			want: false,
+		},
+		{
+			name: "Deletes at index 0 successfully",
+			fields: fields{
+				Node: NewNode("Create app"),
+				ideas: []Idea{
+					*NewIdea("Create Diagrams"),
+					*NewIdea("Create Business Logic"),
+					*NewIdea("Create Folder Structure"),
+				},
+			},
+			args: args{
+				i: 0,
+			},
+			want: true,
+		},
+		{
+			name: "Deletes at index 1 successfully",
+			fields: fields{
+				Node: NewNode("Create app"),
+				ideas: []Idea{
+					*NewIdea("Create Diagrams"),
+					*NewIdea("Create Business Logic"),
+					*NewIdea("Create Folder Structure"),
+				},
+			},
+			args: args{
+				i: 1,
+			},
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := &List{
+				Node:  tt.fields.Node,
+				ideas: tt.fields.ideas,
+			}
+			if got := l.DeleteAt(tt.args.i); got != tt.want {
+				t.Errorf("DeleteAt() = %v, want %v", got, tt.want)
 			}
 		})
 	}
