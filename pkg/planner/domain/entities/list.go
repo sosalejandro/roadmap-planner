@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// TODO: Add CLI Workflow template
 // TODO: Add missing documentation to methods.
 // TODO: Get 100% coverage.
 // TODO: Add more business logic
@@ -32,10 +33,6 @@ type List struct {
 type Sublist struct {
 	List
 }
-
-//func (l *List) String() string {
-//	return l.Node.String()
-//}
 
 func (l *List) Len() int {
 	return len(l.ideas)
