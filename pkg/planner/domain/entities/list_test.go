@@ -1,7 +1,8 @@
-package planner
+package entities
 
 import (
 	"reflect"
+	"roadmap-planner/pkg/planner/domain/value-objects"
 	"testing"
 )
 
@@ -17,7 +18,10 @@ func TestNewIdea(t *testing.T) {
 		{
 			name: "Creates an Idea named 'Create graph model'",
 			args: args{name: "Create graph model"},
-			want: &Idea{&Node{name: "Create graph model"}},
+			want: func() *Idea {
+				n := Idea(*value_objects.NewNode("Create graph model"))
+				return &n
+			}(),
 		},
 	}
 	for _, tt := range tests {
@@ -42,10 +46,9 @@ func TestNewList(t *testing.T) {
 			name: "Creates a List named 'Create an application to manage organization'",
 			args: args{name: "Create an application to manage organization"},
 			want: &List{
-				Node: &Node{
-					name: "Create an application to manage organization",
-				},
-				ideas: make([]Idea, 0),
+				Node: value_objects.NewNode(
+					"Create an application to manage organization"),
+				ideas: make([]value_objects.BaseNode, 0),
 			},
 		},
 	}
@@ -60,15 +63,15 @@ func TestNewList(t *testing.T) {
 
 func TestList_AddIdea(t *testing.T) {
 	type fields struct {
-		Node  *Node
-		Ideas []Idea
+		Node  *value_objects.Node
+		Ideas []value_objects.BaseNode
 	}
 	type args struct {
-		idea Idea
+		idea *Idea
 	}
 	type want struct {
 		success bool
-		state   []Idea
+		state   []value_objects.BaseNode
 	}
 	tests := []struct {
 		name   string
@@ -79,13 +82,13 @@ func TestList_AddIdea(t *testing.T) {
 		{
 			name: "Pushes 'Make benchmarks after logic'",
 			fields: fields{
-				Node:  NewNode("Makes benchmark after logic"),
-				Ideas: make([]Idea, 0),
+				Node:  value_objects.NewNode("Makes benchmark after logic"),
+				Ideas: make([]value_objects.BaseNode, 0),
 			},
-			args: args{idea: *NewIdea("Make benchmarks after logic")},
+			args: args{idea: NewIdea("Make benchmarks after logic")},
 			want: want{
 				success: false,
-				state:   []Idea{*NewIdea("Make benchmarks after logic")},
+				state:   []value_objects.BaseNode{NewIdea("Make benchmarks after logic")},
 			},
 		},
 	}
@@ -105,16 +108,16 @@ func TestList_AddIdea(t *testing.T) {
 
 func TestList_InsertAt(t *testing.T) {
 	type fields struct {
-		Node  *Node
-		ideas []Idea
+		Node  *value_objects.Node
+		ideas []value_objects.BaseNode
 	}
 	type args struct {
 		i    int
-		idea Idea
+		idea *Idea
 	}
 	type want struct {
 		success bool
-		idea    Idea
+		idea    *Idea
 	}
 	tests := []struct {
 		name   string
@@ -125,39 +128,39 @@ func TestList_InsertAt(t *testing.T) {
 		{
 			name: "Inserts at index 0 successfully",
 			fields: fields{
-				Node: NewNode("Create app"),
-				ideas: []Idea{
-					*NewIdea("Create Diagrams"),
-					*NewIdea("Create Business Logic"),
-					*NewIdea("Create Folder Structure"),
+				Node: value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{
+					NewIdea("Create Diagrams"),
+					NewIdea("Create Business Logic"),
+					NewIdea("Create Folder Structure"),
 				},
 			},
 			args: args{
 				i:    0,
-				idea: *NewIdea("Create GitHub Repo"),
+				idea: NewIdea("Create GitHub Repo"),
 			},
 			want: want{
 				success: true,
-				idea:    *NewIdea("Create GitHub Repo"),
+				idea:    NewIdea("Create GitHub Repo"),
 			},
 		},
 		{
 			name: "Inserts at index 2 successfully",
 			fields: fields{
-				Node: NewNode("Create app"),
-				ideas: []Idea{
-					*NewIdea("Create Diagrams"),
-					*NewIdea("Create Business Logic"),
-					*NewIdea("Create Folder Structure"),
+				Node: value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{
+					NewIdea("Create Diagrams"),
+					NewIdea("Create Business Logic"),
+					NewIdea("Create Folder Structure"),
 				},
 			},
 			args: args{
 				i:    2,
-				idea: *NewIdea("Create GitHub Repo"),
+				idea: NewIdea("Create GitHub Repo"),
 			},
 			want: want{
 				success: true,
-				idea:    *NewIdea("Create GitHub Repo"),
+				idea:    NewIdea("Create GitHub Repo"),
 			},
 		},
 	}
@@ -177,8 +180,8 @@ func TestList_InsertAt(t *testing.T) {
 
 func TestList_DeleteAt(t *testing.T) {
 	type fields struct {
-		Node  *Node
-		ideas []Idea
+		Node  *value_objects.Node
+		ideas []value_objects.BaseNode
 	}
 	type args struct {
 		i int
@@ -189,15 +192,14 @@ func TestList_DeleteAt(t *testing.T) {
 		args   args
 		want   bool
 	}{
-		// TODO: Add test cases.
 		{
 			name: "Deletes at index 2 successfully",
 			fields: fields{
-				Node: NewNode("Create app"),
-				ideas: []Idea{
-					*NewIdea("Create Diagrams"),
-					*NewIdea("Create Business Logic"),
-					*NewIdea("Create Folder Structure"),
+				Node: value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{
+					NewIdea("Create Diagrams"),
+					NewIdea("Create Business Logic"),
+					NewIdea("Create Folder Structure"),
 				},
 			},
 			args: args{
@@ -208,8 +210,8 @@ func TestList_DeleteAt(t *testing.T) {
 		{
 			name: "Negative index returns false",
 			fields: fields{
-				Node:  NewNode("Create app"),
-				ideas: []Idea{},
+				Node:  value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{},
 			},
 			args: args{
 				i: -1,
@@ -219,8 +221,8 @@ func TestList_DeleteAt(t *testing.T) {
 		{
 			name: "Positive index on empty List returns false",
 			fields: fields{
-				Node:  NewNode("Create app"),
-				ideas: []Idea{},
+				Node:  value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{},
 			},
 			args: args{
 				i: 2,
@@ -230,11 +232,11 @@ func TestList_DeleteAt(t *testing.T) {
 		{
 			name: "Deletes at index 0 successfully",
 			fields: fields{
-				Node: NewNode("Create app"),
-				ideas: []Idea{
-					*NewIdea("Create Diagrams"),
-					*NewIdea("Create Business Logic"),
-					*NewIdea("Create Folder Structure"),
+				Node: value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{
+					NewIdea("Create Diagrams"),
+					NewIdea("Create Business Logic"),
+					NewIdea("Create Folder Structure"),
 				},
 			},
 			args: args{
@@ -245,11 +247,11 @@ func TestList_DeleteAt(t *testing.T) {
 		{
 			name: "Deletes at index 1 successfully",
 			fields: fields{
-				Node: NewNode("Create app"),
-				ideas: []Idea{
-					*NewIdea("Create Diagrams"),
-					*NewIdea("Create Business Logic"),
-					*NewIdea("Create Folder Structure"),
+				Node: value_objects.NewNode("Create app"),
+				ideas: []value_objects.BaseNode{
+					NewIdea("Create Diagrams"),
+					NewIdea("Create Business Logic"),
+					NewIdea("Create Folder Structure"),
 				},
 			},
 			args: args{

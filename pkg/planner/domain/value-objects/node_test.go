@@ -1,4 +1,4 @@
-package planner
+package value_objects
 
 import (
 	"reflect"

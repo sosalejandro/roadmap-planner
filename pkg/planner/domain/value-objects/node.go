@@ -1,6 +1,10 @@
-package planner
+package value_objects
 
 import "fmt"
+
+type BaseNode interface {
+	String() string
+}
 
 // Node is a representation of an entity and all its possible relationships
 type Node struct {

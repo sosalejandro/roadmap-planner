@@ -1,44 +1,72 @@
-package planner
+package entities
 
-import "strings"
+import (
+	"fmt"
+	"roadmap-planner/pkg/planner/domain/value-objects"
+	"strings"
+)
 
-// ListManager is an interface which declares how to manipulate Lists and ideas
-type ListManager interface {
+// TODO: Add missing documentation to methods.
+// TODO: Get 100% coverage.
+// TODO: Add more business logic
+// TODO: Research CLI apps and re usable interfaces for CLI/API
+// TODO: Create sublist logic.
+
+type BaseList interface {
+	value_objects.BaseNode
+	AddIdea(idea value_objects.BaseNode) bool
+	GetIdeas() string
+	MergeList(ideas []value_objects.BaseNode) bool
+	InsertAt(i int, idea value_objects.BaseNode) bool
+	DeleteAt(i int) bool
+	Swap(s, t int) bool
+	Len() int
 }
 
 // List is a representation of an entity which stores ideas
 type List struct {
-	*Node
-	ideas []Idea
+	*value_objects.Node
+	ideas []value_objects.BaseNode
 }
+
+type Sublist struct {
+	List
+}
+
+//func (l *List) String() string {
+//	return l.Node.String()
+//}
 
 func (l *List) Len() int {
 	return len(l.ideas)
 }
 
 // Idea is a representation of a task which could be mutated into other entities.
-type Idea struct {
-	*Node
+type Idea value_objects.Node
+
+func (i *Idea) String() string {
+	return fmt.Sprint(&i)
 }
 
 // NewIdea initializes a new Idea taking a string name.
 func NewIdea(name string) *Idea {
-	n := NewNode(name)
-	return &Idea{n}
+	n := Idea(*value_objects.NewNode(name))
+	return &n
 }
 
 // NewList initializes a new List taking a string name.
 func NewList(name string) *List {
-	n := NewNode(name)
+	n := value_objects.NewNode(name)
 	return &List{
 		Node:  n,
-		ideas: make([]Idea, 0),
+		ideas: make([]value_objects.BaseNode, 0),
 	}
 }
 
 // AddIdea pushes an Idea to the end of the List.
-func (l *List) AddIdea(idea Idea) bool {
-	if idea == (Idea{}) {
+func (l *List) AddIdea(idea value_objects.BaseNode) bool {
+	var ok bool
+	if idea, ok = idea.(value_objects.BaseNode); !ok {
 		return false
 	}
 
@@ -47,13 +75,13 @@ func (l *List) AddIdea(idea Idea) bool {
 }
 
 // InsertAt pushes an Idea at i position.
-func (l *List) InsertAt(i int, idea Idea) bool {
+func (l *List) InsertAt(i int, idea value_objects.BaseNode) bool {
 	if i < 0 || i > l.Len() {
 		return false
 	}
 
 	if i == 0 {
-		l.ideas = append([]Idea{idea}, l.ideas...)
+		l.ideas = append([]value_objects.BaseNode{idea}, l.ideas...)
 		return true
 	}
 
@@ -61,7 +89,7 @@ func (l *List) InsertAt(i int, idea Idea) bool {
 		l.AddIdea(idea)
 	}
 
-	right := []Idea{idea}
+	right := []value_objects.BaseNode{idea}
 	right = append(right, l.ideas[i:]...)
 	l.ideas = append(l.ideas[:i], right...)
 
@@ -69,6 +97,7 @@ func (l *List) InsertAt(i int, idea Idea) bool {
 }
 
 // TODO: Add len validation in test
+
 // DeleteAt deletes an Idea at i position.
 func (l *List) DeleteAt(i int) bool {
 
@@ -91,7 +120,7 @@ func (l *List) DeleteAt(i int) bool {
 }
 
 // MergeList takes a list to be merged with the current.
-func (l *List) MergeList(ideas []Idea) bool {
+func (l *List) MergeList(ideas []value_objects.BaseNode) bool {
 	if len(ideas) == 0 {
 		return false
 	}
@@ -128,7 +157,3 @@ func (l *List) GetIdeas() string {
 
 	return sb.String()
 }
-
-// TODO: Get 100% coverage.
-// TODO: Add more business logic
-// TODO: Research CLI apps and re usable interfaces for CLI/API
