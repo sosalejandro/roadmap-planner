@@ -1,12 +1,12 @@
 package entities
 
 import (
-	"fmt"
 	"roadmap-planner/pkg/planner/domain/value-objects"
 	"strings"
 )
 
-// TODO: Add CLI Workflow template
+// TODO: Increase range of tests to evaluate slightly more invalid states.
+// TODO: Add CI Workflow template
 // TODO: Add missing documentation to methods.
 // TODO: Get 100% coverage.
 // TODO: Add more business logic
@@ -39,15 +39,19 @@ func (l *List) Len() int {
 }
 
 // Idea is a representation of a task which could be mutated into other entities.
-type Idea value_objects.Node
+type Idea struct {
+	*value_objects.Node
+}
 
 func (i *Idea) String() string {
-	return fmt.Sprint(&i)
+	// Funny how referencing the pointer allow to access the base.String() which is found
+	// in the Node.
+	return i.Node.String()
 }
 
 // NewIdea initializes a new Idea taking a string name.
 func NewIdea(name string) *Idea {
-	n := Idea(*value_objects.NewNode(name))
+	n := Idea{value_objects.NewNode(name)}
 	return &n
 }
 
