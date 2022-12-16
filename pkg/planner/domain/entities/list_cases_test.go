@@ -2,11 +2,37 @@ package entities
 
 import value_objects "roadmap-planner/pkg/planner/domain/value-objects"
 
+var ideasList = []value_objects.BaseNode{
+	NewIdea("Create repository"),
+	NewIdea("Brainstorm use cases"),
+	NewIdea("Create data models"),
+	NewIdea("Define relationships"),
+	NewIdea("Define scope of the problem"),
+	NewIdea("Create sequence diagrams"),
+	NewIdea("Create C4 Diagrams"),
+	NewIdea("Create CI Pipeline"),
+	NewIdea("Create CD Pipeline"),
+	NewIdea("Setup actions to display tests"),
+	NewIdea("Add PR template"),
+	NewIdea("Create K8s infrastructure"),
+	NewIdea("Define context"),
+	NewIdea("Benchmark performance"),
+	NewIdea("Create integration tests"),
+	NewIdea("Create E2E tests"),
+	NewIdea("Create Postman Documentation"),
+	NewIdea("Create Postman Tests (E2E)"),
+	NewIdea("Create Swagger Docs"),
+	NewIdea("Add OAuth2"),
+	NewIdea("Add Google Calendar integration"),
+	NewIdea("Create software documentation"),
+}
+
 type args struct {
 	name  string
 	i     int
 	idea  *Idea
 	ideas []value_objects.BaseNode
+	s, t  int
 }
 
 type fields struct {
@@ -286,5 +312,37 @@ var listMergeListsTests = []struct {
 		fields: fields{},
 		args:   args{},
 		want:   false,
+	},
+}
+
+var listSwapTests = []struct {
+	name   string
+	fields fields
+	args   args
+	want   bool
+}{
+	{
+		name: "Moves idea at index 2 to index 5",
+		fields: fields{
+			node:  value_objects.NewNode("To do list"),
+			ideas: ideasList,
+		},
+		args: args{
+			s: 2,
+			t: 5,
+		},
+		want: true,
+	},
+	{
+		name: "Fails swapping idea at index 2 to index 20",
+		fields: fields{
+			node:  value_objects.NewNode("To do list"),
+			ideas: ideasList,
+		},
+		args: args{
+			s: 2,
+			t: 22,
+		},
+		want: false,
 	},
 }

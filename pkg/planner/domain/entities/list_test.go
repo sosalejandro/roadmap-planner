@@ -98,3 +98,17 @@ func TestList_MergeList(t *testing.T) {
 		})
 	}
 }
+
+func TestList_Swap(t *testing.T) {
+	for _, tt := range listSwapTests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := &List{
+				Node:  tt.fields.node,
+				ideas: tt.fields.ideas,
+			}
+			if got := l.Swap(tt.args.s, tt.args.t); got != tt.want {
+				t.Errorf("Swap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
