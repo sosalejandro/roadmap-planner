@@ -2,31 +2,6 @@ package entities
 
 import value_objects "roadmap-planner/pkg/planner/domain/value-objects"
 
-var ideasList = []value_objects.BaseNode{
-	NewIdea("Create repository"),
-	NewIdea("Brainstorm use cases"),
-	NewIdea("Create data models"),
-	NewIdea("Define relationships"),
-	NewIdea("Define scope of the problem"),
-	NewIdea("Create sequence diagrams"),
-	NewIdea("Create C4 Diagrams"),
-	NewIdea("Create CI Pipeline"),
-	NewIdea("Create CD Pipeline"),
-	NewIdea("Setup actions to display tests"),
-	NewIdea("Add PR template"),
-	NewIdea("Create K8s infrastructure"),
-	NewIdea("Define context"),
-	NewIdea("Benchmark performance"),
-	NewIdea("Create integration tests"),
-	NewIdea("Create E2E tests"),
-	NewIdea("Create Postman Documentation"),
-	NewIdea("Create Postman Tests (E2E)"),
-	NewIdea("Create Swagger Docs"),
-	NewIdea("Add OAuth2"),
-	NewIdea("Add Google Calendar integration"),
-	NewIdea("Create software documentation"),
-}
-
 type args struct {
 	name  string
 	i     int
@@ -344,5 +319,23 @@ var listSwapTests = []struct {
 			t: 22,
 		},
 		want: false,
+	},
+}
+
+var ideasListNames = "Create repository,Brainstorm use cases,Create data models,Define relationships,Define scope of the problem,Create sequence diagrams,Create C4 Diagrams,Create CI Pipeline,Create CD Pipeline,Setup actions to display tests,Add PR template,Create K8s infrastructure,Define context,Benchmark performance,Create integration tests,Create E2E tests,Create Postman Documentation,Create Postman Tests (E2E),Create Swagger Docs,Add OAuth2,Add Google Calendar integration,Create software documentation."
+
+var listGetIdeasTests = []struct {
+	name   string
+	fields fields
+	want   string
+}{
+	// TODO: Add test cases.
+	{
+		name: "Retrieves all ideas",
+		fields: fields{
+			node:  value_objects.NewNode("To do list"),
+			ideas: ideasList,
+		},
+		want: ideasListNames,
 	},
 }

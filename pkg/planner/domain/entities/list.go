@@ -13,10 +13,8 @@ import (
 // TODO: Research CLI apps and re usable interfaces for CLI/API
 // TODO: Create sublist logic.
 
-type BaseList interface {
-	value_objects.BaseNode
+type BaseListWrite interface {
 	AddIdea(idea value_objects.BaseNode) bool
-	GetIdeas() string
 	MergeList(ideas []value_objects.BaseNode) bool
 	InsertAt(i int, idea value_objects.BaseNode) bool
 	DeleteAt(i int) bool
@@ -24,10 +22,16 @@ type BaseList interface {
 	Len() int
 }
 
+type BaseListRead interface {
+	GetIdeas() string
+	GetElementAt(i int) (value_objects.BaseNode, bool)
+	Len() int
+}
+
 // List is a representation of an entity which stores ideas
 type List struct {
-	*value_objects.Node
-	ideas []value_objects.BaseNode
+	*value_objects.Node `json:"list"`
+	ideas               []value_objects.BaseNode `json:"ideas"`
 }
 
 type Sublist struct {
@@ -40,7 +44,7 @@ func (l *List) Len() int {
 
 // Idea is a representation of a task which could be mutated into other entities.
 type Idea struct {
-	*value_objects.Node
+	*value_objects.Node `json:"idea"`
 }
 
 func (i *Idea) String() string {
@@ -61,6 +65,13 @@ func NewList(name string) *List {
 	return &List{
 		Node:  n,
 		ideas: make([]value_objects.BaseNode, 0),
+	}
+}
+
+func NewSublist(name string) *Sublist {
+	n := value_objects.NewNode(name)
+	return &Sublist{
+		*NewList(n.String()),
 	}
 }
 
@@ -157,4 +168,12 @@ func (l *List) GetIdeas() string {
 	}
 
 	return sb.String()
+}
+
+func (l *List) GetElementAt(i int) (value_objects.BaseNode, bool) {
+	if i > l.Len() {
+		return nil, false
+	}
+	v := *l
+	return v.ideas[i], true
 }

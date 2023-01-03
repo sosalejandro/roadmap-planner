@@ -8,7 +8,7 @@ type BaseNode interface {
 
 // Node is a representation of an entity and all its possible relationships
 type Node struct {
-	name string
+	name string `json:"name"`
 	//Has     []*Node
 	//Creates []*Node
 	//Blocks  []*Node

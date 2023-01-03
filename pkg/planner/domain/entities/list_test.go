@@ -2,8 +2,34 @@ package entities
 
 import (
 	"reflect"
+	value_objects "roadmap-planner/pkg/planner/domain/value-objects"
 	"testing"
 )
+
+var ideasList = []value_objects.BaseNode{
+	NewIdea("Create repository"),
+	NewIdea("Brainstorm use cases"),
+	NewIdea("Create data models"),
+	NewIdea("Define relationships"),
+	NewIdea("Define scope of the problem"),
+	NewIdea("Create sequence diagrams"),
+	NewIdea("Create C4 Diagrams"),
+	NewIdea("Create CI Pipeline"),
+	NewIdea("Create CD Pipeline"),
+	NewIdea("Setup actions to display tests"),
+	NewIdea("Add PR template"),
+	NewIdea("Create K8s infrastructure"),
+	NewIdea("Define context"),
+	NewIdea("Benchmark performance"),
+	NewIdea("Create integration tests"),
+	NewIdea("Create E2E tests"),
+	NewIdea("Create Postman Documentation"),
+	NewIdea("Create Postman Tests (E2E)"),
+	NewIdea("Create Swagger Docs"),
+	NewIdea("Add OAuth2"),
+	NewIdea("Add Google Calendar integration"),
+	NewIdea("Create software documentation"),
+}
 
 func TestNewIdea(t *testing.T) {
 	for _, tt := range newIdeaTests {
@@ -108,6 +134,20 @@ func TestList_Swap(t *testing.T) {
 			}
 			if got := l.Swap(tt.args.s, tt.args.t); got != tt.want {
 				t.Errorf("Swap() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestList_GetIdeas(t *testing.T) {
+	for _, tt := range listGetIdeasTests {
+		t.Run(tt.name, func(t *testing.T) {
+			l := &List{
+				Node:  tt.fields.node,
+				ideas: tt.fields.ideas,
+			}
+			if got := l.GetIdeas(); got != tt.want {
+				t.Errorf("GetIdeas() = %v, want %v", got, tt.want)
 			}
 		})
 	}
