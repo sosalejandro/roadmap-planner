@@ -3,6 +3,7 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -90,6 +91,9 @@ func (c *WriteController) PromoteToSublist(w http.ResponseWriter, r *http.Reques
 }
 
 func (c *WriteController) CreateList(w http.ResponseWriter, r *http.Request) {
+	logger := log.Default()
+	logger.Println("executing create list v1")
+
 	params := mux.Vars(r)
 	name := params["name"]
 
@@ -108,7 +112,7 @@ func (c *WriteController) CreateList(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	msg := fmt.Sprintf("List [%s] has been created.", name)
+	msg := fmt.Sprintf("List `%s` has been created.", name)
 	json.NewEncoder(w).Encode(msg)
 }
 

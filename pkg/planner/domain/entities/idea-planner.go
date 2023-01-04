@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"roadmap-planner/pkg/planner/domain/value-objects"
+	value_objects "roadmap-planner/pkg/planner/domain/value-objects"
 )
 
 // TODO: Add missing documentation to methods.
@@ -31,12 +31,17 @@ func NewIdeaPlanner(list Planner) *IdeaPlanner {
 	}
 }
 
+func (ip *IdeaPlanner) String() string {
+	list := *ip.list
+	return list.(value_objects.BaseNode).String()
+}
+
 // AddToList adds an Idea to the current list returning
 // an error specifying what's going on.
 func (ip *IdeaPlanner) AddToList(idea value_objects.BaseNode) error {
 	var list = *ip.list
 	if err := list.AddIdea(idea); !err {
-		return errors.New(fmt.Sprintf("error inserting %s", idea))
+		return fmt.Errorf("error inserting %s", idea)
 	}
 	return nil
 }
@@ -85,15 +90,15 @@ func (ip *IdeaPlanner) PromoteToSublist(i int) (*Sublist, error) {
 
 createSublist:
 	if err := list.DeleteAt(i); !err {
-		return nil, errors.New(fmt.Sprintf("error deleting %d index", i))
+		return nil, fmt.Errorf("error deleting %d index", i)
 	}
 	if err := list.InsertAt(i, newSublist); !err {
-		return nil, errors.New(fmt.Sprintf("error inserting %d index", i))
+		return nil, fmt.Errorf("error inserting %d index", i)
 	}
 
 getSublist:
 	if old, found = (*ip.list).GetElementAt(i); !found {
-		return nil, errors.New(fmt.Sprintf("element not found at %d index", i))
+		return nil, fmt.Errorf("element not found at %d index", i)
 	}
 	return old.(*Sublist), nil
 }

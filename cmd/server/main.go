@@ -10,14 +10,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// TODO: Add Gremlin provider
+// TODO: Add performance tests
+// TODO: Add open api specs
+// TODO: Add e2e tests
+// TODO:
+// TODO:
+
 func main() {
-	router := mux.NewRouter()
-	RegisterListRoutes(router)
+	r := mux.NewRouter()
+	RegisterListRoutes(r)
 
 	fmt.Println("The list management app is on tap now: http://localhost:8080")
 	srv := &http.Server{
-		Addr:    "8080",
-		Handler: router,
+		Addr:    ":8080",
+		Handler: r,
 	}
 
 	log.Fatal(srv.ListenAndServe())
