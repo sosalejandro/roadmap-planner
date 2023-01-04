@@ -2,8 +2,9 @@ package rest
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 var (
@@ -20,7 +21,7 @@ type Controller interface {
 	CreateList(w http.ResponseWriter, r *http.Request)
 }
 
-func RegisterListRoutes(r *mux.Router, c Controller, ver string) {
+func RegisterListWriteRoutes(r *mux.Router, c Controller, ver string) {
 	protected := r.NewRoute().Subrouter()
 	protected.HandleFunc(createRoute(ver, CreateListPath), c.CreateList).Methods("POST")
 	protected.HandleFunc(createRoute(ver, AddListPath), c.AddToList).Methods("POST")
