@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"roadmap-planner/pkg/planner/http/rest"
 	"roadmap-planner/pkg/planner/storage/memory"
+
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -23,11 +24,11 @@ func main() {
 }
 
 func RegisterListRoutes(r *mux.Router) {
-	cV1 := initListControllerV1()
-	rest.RegisterListRoutes(r, cV1, "v1")
+	cV1 := initListWriteControllerV1()
+	rest.RegisterListWriteRoutes(r, cV1, "v1")
 }
 
-func initListControllerV1() rest.Controller {
+func initListWriteControllerV1() rest.Controller {
 	r := new(memory.IdeaPlannerMemoryStorage)
 	s := rest.NewService(r)
 	c := rest.Controller(rest.NewWriteController(s))
