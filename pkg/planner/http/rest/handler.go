@@ -1,9 +1,16 @@
 package rest
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
-	"roadmap-planner/pkg/planner/storage/memory"
+)
+
+var (
+	CreateListPath       = "list/create/{name}"
+	AddListPath          = "list/{id}/create/{idea}"
+	InsertAtListPath     = "list/{id}/{subId}/create/{idea}"
+	PromoteToSublistPath = "list/{id}/promote/{ideaId}"
 )
 
 type Controller interface {
@@ -13,21 +20,14 @@ type Controller interface {
 	CreateList(w http.ResponseWriter, r *http.Request)
 }
 
-func Router() {
-	router := mux.NewRouter()
-	c := initController()
-
-	router.HandleFunc("/api/v1/list/create/{name}", c.CreateList).Methods("POST")
-	router.HandleFunc("/api/v1/list/{id}/create/{idea}", c.AddToList).Methods("POST")
-	router.HandleFunc("/api/v1/list/{id}/{subId}/create/{idea}", c.InsertAtList).Methods("POST")
-	router.HandleFunc("/api/v1/list/{id}/promote/{ideaId}", c.PromoteToSublist).Methods("PUT")
-
-	//return router
+func RegisterListRoutes(r *mux.Router, c Controller, ver string) {
+	protected := r.NewRoute().Subrouter()
+	protected.HandleFunc(createRoute(ver, CreateListPath), c.CreateList).Methods("POST")
+	protected.HandleFunc(createRoute(ver, AddListPath), c.AddToList).Methods("POST")
+	protected.HandleFunc(createRoute(ver, InsertAtListPath), c.InsertAtList).Methods("POST")
+	protected.HandleFunc(createRoute(ver, PromoteToSublistPath), c.PromoteToSublist).Methods("PUT")
 }
 
-func initController() Controller {
-	r := new(memory.IdeaPlannerMemoryStorage)
-	s := NewService(r)
-	c := Controller(NewWriteController(s))
-	return c
+func createRoute(ver string, path string) string {
+	return fmt.Sprintf("/api/%s/%s", ver, path)
 }
